@@ -380,7 +380,6 @@ const RAMOS = [
 ]
 
 const polizaSchema = new mongoose.Schema({
-  sucursal: { type: String, trim: true },
   fechaInicVig: { type: Date },
   medioDePago: { type: String, enum: ["TARJ_CRED","CBU","EFECTIVO","CUPON","OTRO"], default: "EFECTIVO" },
   estado: { type: String, enum: ["VIGENTE","ANULADA","PENDIENTE_CLIENTE"], default: "VIGENTE" },
@@ -1076,12 +1075,11 @@ app.post("/api/seguros/email-masivo", authenticateToken, requireAdmin, async (re
 // ============================================================
 app.get("/api/seguros/polizas", authenticateToken, requireAdmin, async (req, res) => {
   try {
-    const { estado, aseguradora, ramo, sucursal, search, page = 1, limit = 100, year, month } = req.query
+    const { estado, aseguradora, ramo, search, page = 1, limit = 100, year, month } = req.query
     const filter = {}
     if (estado) filter.estado = estado
     if (aseguradora) filter.aseguradora = aseguradora
     if (ramo) filter.ramo = ramo
-    if (sucursal) filter.sucursal = sucursal
     if (year && month) {
       filter.fechaInicVig = { $gte: new Date(parseInt(year), parseInt(month)-1, 1), $lte: new Date(parseInt(year), parseInt(month), 0, 23, 59, 59, 999) }
     }
@@ -1114,7 +1112,7 @@ async function syncCobranzaEfectivo(poliza, userId) {
     const mesLabel = `${MES_LABELS[fecha.getUTCMonth()]} ${fecha.getUTCFullYear()}`
     pagos = [{ mes: mesKey, mesLabel, estado: "PENDIENTE" }]
   }
-  await new CobranzaEfectivo({ polizaId: poliza._id, nombreApellido: poliza.nombreApellido, sucursal: poliza.sucursal, aseguradora: poliza.aseguradora, patente: poliza.patente, datosRiesgo: poliza.datosRiesgo, whatsapp: poliza.celular, email: poliza.email, ramo: poliza.ramo, diaVto, pagos, creadoPor: userId }).save()
+  await new CobranzaEfectivo({ polizaId: poliza._id, nombreApellido: poliza.nombreApellido, aseguradora: poliza.aseguradora, patente: poliza.patente, datosRiesgo: poliza.datosRiesgo, whatsapp: poliza.celular, email: poliza.email, ramo: poliza.ramo, diaVto, pagos, creadoPor: userId }).save()
   return true
 }
 
