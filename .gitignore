@@ -120,16 +120,6 @@ dist
 .env.local
 .env.*
 
-# Archivos locales — no van al repo
-.gitattributes
-bannertusventas.png
-firebaseAdmin.js
-package-lock.json
-config/
-scripts/
-*.json
-!package.json
-
 # Upload files
 uploads/
 
