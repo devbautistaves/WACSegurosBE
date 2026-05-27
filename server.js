@@ -792,7 +792,7 @@ app.post("/api/notifications", authenticateToken, requireAdmin, upload.array("at
 
     let emailRecipients = []
     if (recipientType === "all") {
-      emailRecipients = await User.find({ role: { $in: ["seller","support"] }, isActive: true })
+      emailRecipients = await User.find({ isActive: true })
     } else if (parsedRecipients.length) {
       emailRecipients = await User.find({ _id: { $in: parsedRecipients }, isActive: true })
     }
