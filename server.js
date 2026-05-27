@@ -112,16 +112,16 @@ const WAC_ACCENT  = "#1d4ed8"   // azul
 const EMAIL_FROM = process.env.EMAIL_FROM || process.env.EMAIL_SMTP
 
 let transporter = null
-if (process.env.EMAIL_SMTP && process.env.PASSWORD_SMTP) {
+if (process.env.EMAIL_SMTP) {
   transporter = nodemailer.createTransport({
-    host: "localhost",
-    port: 25,
+    host: process.env.SMTP_HOST || "localhost",
+    port: parseInt(process.env.SMTP_PORT || "25"),
     secure: false,
     tls: { rejectUnauthorized: false },
   })
-  console.log("✉️  Email transporter configurado (Postfix local)")
+  console.log("✉️  Email transporter configurado")
 } else {
-  console.warn("EMAIL_SMTP / PASSWORD_SMTP no configurados.")
+  console.warn("EMAIL_SMTP no configurado — notificaciones por email desactivadas.")
 }
 
 function _emailBase(accentColor, bandContent, bodyContent) {
